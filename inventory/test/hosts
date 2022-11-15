@@ -1,0 +1,5 @@
+[webservers]
+web1.lazy.test
+
+[dbservers]
+db1.lazy.test

@@ -1,0 +1,24 @@
+---
+# tasks file for create_admin_user
+- name: Add the user with a specific uid and a primary group of "admin"
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    comment: "{{ item.comment }}"
+    uid: "{{ item.uid }}"
+  loop: "{{ admin }}"
+
+- name: Setup authorized key
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ lookup('file', 'pub_keys/{{ item.name }}.pub') }}"
+  loop: "{{ admin }}"
+
+- name: Update sudoers file and validate
+  ansible.builtin.lineinfile:
+    dest: /etc/sudoers
+    insertafter: EOF
+    line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
+    regexp: "^{{ item.name }} .*"
+    state: present
+  loop: "{{ admin }}"
+

@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: yes
+  become: yes
+  become_user: root
+  tasks:
+    - ansible.builtin.import_role:
+        name: create_admin_user
+
